@@ -420,7 +420,7 @@ public final class MotionService extends Service implements DisplayManager.Displ
         if(stopped||paused)return;
         List<Panel> discovered=new ArrayList<>();StringBuilder signature=new StringBuilder();
         for(Display display:displays.getDisplays()){
-            if(display.getDisplayId()>1)continue; // Fold7 built-in logical displays only.
+            if(display.getDisplayId()>1)continue; // Built-in logical displays only.
             // getRealSize can inherit the process activity's max bounds after that activity
             // moves to the secondary panel. Mode dimensions remain tied to this display.
             Display.Mode mode=display.getMode();int rotation=display.getRotation();

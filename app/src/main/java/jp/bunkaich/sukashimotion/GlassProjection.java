@@ -3,7 +3,7 @@ package jp.bunkaich.sukashimotion;
 /** Keeps inner content width stable, with gentle vertical compensation and cover parallax. */
 final class GlassProjection {
     // A conservative fixed perspective. The earlier 4-panel reference removed 22%
-    // of the far edge's height at 120 degrees and looked pinched on the real Fold7.
+    // of the far edge's height at 120 degrees and looked pinched on real Samsung Fold hardware.
     // This keeps 94.6% at 120 degrees, close to the accepted gentle taper.
     static final float REFERENCE_DISTANCE = 16; // In half-panel widths; not a measured eye position.
     record Pose(float expansion,float taper) {}

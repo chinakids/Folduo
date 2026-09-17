@@ -26,10 +26,10 @@
     <string name="sensors_title">传感器诊断</string>
     <string name="probe_sensors">检测传感器 5 秒</string>
     <string name="not_measured">尚无测量结果</string>
-    <string name="device_note">适用于 Fold7 SM-F966Z · 实验性</string>
+    <string name="device_note">适用于三星 Galaxy Z Fold · 实验性</string>
     <string name="need_overlay">请先允许在其他应用上层显示。</string>
     <string name="need_shizuku">请先连接 Shizuku。</string>
-    <string name="unsupported_device">此版本的屏幕控制仅适用于 Fold7 SM-F966Z。你仍可以体验预览。</string>
+    <string name="unsupported_device">此版本的屏幕控制适用于三星 Galaxy Z Fold 系列。你仍可以体验预览。</string>
     <string name="close_to_prepare">将手机完整闭合一次以完成设置。</string>
     <string name="probe_running">正在检查传感器订阅和事件……请轻轻移动手机。</string>
     <string name="nav_recents">最近任务</string>
@@ -145,7 +145,7 @@
     <string name="err_monitor_inactive">折叠监测未激活。</string>
     <string name="err_inner_unavailable">内屏控制不可用。</string>
     <string name="err_unsupported_action">不支持此操作。</string>
-    <string name="err_wrong_model">此版本针对 Fold7 SM-F966Z</string>
+    <string name="err_wrong_model">此设备不支持并发屏幕控制</string>
     <string name="err_states_unavailable">无法获取并发屏幕状态</string>
     <string name="err_unexpected_caller">意外的调用方</string>
     <string name="err_angle_stopped">角度会话已停止</string>

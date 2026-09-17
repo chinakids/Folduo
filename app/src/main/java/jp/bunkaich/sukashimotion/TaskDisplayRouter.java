@@ -89,7 +89,7 @@ final class TaskDisplayRouter {
         Object task=tasks.get(0);int id=number(task,"taskId");
         if(number(task,"displayId")!=source)throw new IllegalStateException("@folduo/err_app_moved");
         // Recents restarts the existing task on its destination. A bare reparent left it undrawn
-        // on this Fold7. The framework still checks launch/display and task restrictions.
+        // on this device. The framework still checks launch/display and task restrictions.
         Bundle options=ActivityOptions.makeBasic().setLaunchDisplayId(destination).toBundle();
         api.getMethod("startActivityFromRecents",int.class,Bundle.class).invoke(manager,id,options);
         lastDestination=destination;movedTasks.add(id);result.putBoolean("ok",true);result.putBoolean("moved",true);result.putInt("taskId",id);return result;

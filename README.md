@@ -6,14 +6,14 @@ English | [日本語](README.ja.md) | [简体中文](README.zh.md)
 
 I built this out of curiosity. I don't plan to actively develop or maintain it. I may make changes if something sparks my interest, but otherwise expect this repository to remain mostly untouched.
 
-An experimental Galaxy Z Fold7 app that uses hinge angle to create a frosted-glass transition between the cover and inner screens. It holds an app's image in place with parallax and blur while the phone folds, then hands over to the app on the other display. It works with regular apps without replacing your launcher.
+An experimental Samsung Galaxy Z Fold app that uses hinge angle to create a frosted-glass transition between the cover and inner screens. It holds an app's image in place with parallax and blur while the phone folds, then hands over to the app on the other display. It works with regular apps without replacing your launcher.
 
 [Download v0.1.21](https://github.com/bunkaich/Folduo/releases/tag/v0.1.21)
 
 ## Requirements
 
-- **Galaxy Z Fold7 SM-F966Z only.** Display control is disabled on other models.
-- Tested on Android 16 / One UI 8.5, build `F966ZSCS1BZH4`.
+- **Samsung Galaxy Z Fold series** (Fold4 and later with concurrent display support). Display control is disabled on unsupported models.
+- Tested on Galaxy Z Fold7 / Android 16 / One UI 8.5.
 - [Shizuku](https://shizuku.rikka.app/guide/setup/), installed and running. Tested with `13.6.0.r1086.2650830c`.
 - The supported Samsung stock interactive wallpaper, configured as described below.
 
@@ -76,7 +76,7 @@ The cover screen uses Samsung's normal navigation. The inner screen has a small 
 
 To use the included launcher, tap **Use Folduo as the home app** in Folduo settings and select Folduo. Tap an icon to open an app, long-press to replace it, or use **All apps** to browse installed apps. Tap the **Folduo** button on the home screen to return to settings. English, Japanese, and Simplified Chinese are supported.
 
-On the tested Fold7, Samsung redirects new app launches from the inner display to the cover display. Folduo home moves only the selected app to the inner display and restores the selected home when returning. This does not fix other launchers.
+On tested Samsung Fold devices, Samsung redirects new app launches from the inner display to the cover display. Folduo home moves only the selected app to the inner display and restores the selected home when returning. This does not fix other launchers.
 
 Three Calculator/home round trips, moving the home between both displays, long-press selection and opening settings passed on the phone with both displays held on by the helper. The final check with physical folding is still pending. If an app does not open after unfolding, close the phone and launch it from the cover home screen.
 

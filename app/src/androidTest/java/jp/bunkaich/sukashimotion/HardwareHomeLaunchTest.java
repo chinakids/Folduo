@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.Assert.*;
 
-/** Explicit opt-in test: temporarily holds both physical Fold7 displays. */
+/** Explicit opt-in test: temporarily holds both physical Samsung Fold displays. */
 public class HardwareHomeLaunchTest {
     interface Check { boolean ready() throws Exception; }
     private void waitFor(Check check) throws Exception {
@@ -55,7 +55,7 @@ public class HardwareHomeLaunchTest {
         return null;
     }
     @Test public void realInnerHomeLaunchesSelectedAppsAndKeepsLongPress() throws Exception {
-        Assume.assumeTrue("true".equals(InstrumentationRegistry.getArguments().getString("folduoHardware")) && "SM-F966Z".equals(Build.MODEL));
+        Assume.assumeTrue("true".equals(InstrumentationRegistry.getArguments().getString("folduoHardware")));
         var instrumentation=InstrumentationRegistry.getInstrumentation();
         Context context=instrumentation.getTargetContext();
         boolean enabled=MotionSettings.enabled(context);

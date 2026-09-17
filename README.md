@@ -1,6 +1,6 @@
 **Vibe-coded with GPT-6 Astra in Codex.**
 
-English | [日本語](README.ja.md)
+English | [日本語](README.ja.md) | [简体中文](README.zh.md)
 
 # Folduo
 
@@ -21,7 +21,7 @@ No root required. Once set up, it can run without USB if Shizuku is started thro
 
 ## Setup
 
-Folduo supports English and Japanese. At the top of the app, tap **Language / 言語** and choose **English**, **日本語**, or **System default**. The choice is saved and also appears in Android’s app language settings. Japanese devices use Japanese by default; other devices use English.
+Folduo supports English, Japanese, and Simplified Chinese. At the top of the app, tap **Language / 言語 / 语言** and choose **English**, **日本語**, **简体中文**, or **System default**. The choice is saved and also appears in Android’s app language settings. Japanese devices use Japanese by default; other devices use English.
 
 ### 1. Start Shizuku
 

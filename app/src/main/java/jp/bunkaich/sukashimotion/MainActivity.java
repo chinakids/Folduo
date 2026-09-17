@@ -112,14 +112,18 @@ public final class MainActivity extends Activity {
     private String languageName(){
         LocaleList locales=getSystemService(LocaleManager.class).getApplicationLocales();
         if(locales.isEmpty())return getString(R.string.language_system);
-        return getString("ja".equals(locales.get(0).getLanguage())?R.string.language_japanese:R.string.language_english);
+        String lang=locales.get(0).getLanguage();
+        if("ja".equals(lang))return getString(R.string.language_japanese);
+        if("zh".equals(lang))return getString(R.string.language_chinese);
+        return getString(R.string.language_english);
     }
     private void chooseLanguage(){
         LocaleManager manager=getSystemService(LocaleManager.class);LocaleList locales=manager.getApplicationLocales();
-        int selected=locales.isEmpty()?0:("ja".equals(locales.get(0).getLanguage())?2:1);
-        String[] names={getString(R.string.language_system),getString(R.string.language_english),getString(R.string.language_japanese)};
+        String lang=locales.isEmpty()?"":locales.get(0).getLanguage();
+        int selected=locales.isEmpty()?0:("ja".equals(lang)?3:("zh".equals(lang)?2:1));
+        String[] names={getString(R.string.language_system),getString(R.string.language_english),getString(R.string.language_chinese),getString(R.string.language_japanese)};
         new AlertDialog.Builder(this).setTitle(R.string.language_title).setSingleChoiceItems(names,selected,(dialog,index)->{
-            dialog.dismiss();String tags=new String[]{"","en","ja"}[index];
+            dialog.dismiss();String tags=new String[]{"","en","zh","ja"}[index];
             if(!manager.getApplicationLocales().toLanguageTags().equals(tags))manager.setApplicationLocales(LocaleList.forLanguageTags(tags));
         }).setNegativeButton(R.string.close,null).show();
     }

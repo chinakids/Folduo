@@ -103,7 +103,7 @@ final class HomeScene extends FrameLayout {
                     tile.setOnLongClickListener(v->{actions.choose(slot);return true;});
                 }
             }
-            drawer=text(c,c.getString(R.string.home_all_apps),12,0xfff8f5ef);drawer.setBackground(round(0x481d334b,dp(24)));addView(drawer);
+            drawer=text(c,c.getString(R.string.home_all_apps),13,0xfff8f5ef);drawer.setBackground(round(0x551d334b,dp(24)));drawer.setPadding(dp(20),dp(10),dp(20),dp(10));addView(drawer);
             if(interactive){drawer.setOnClickListener(v->actions.drawer());drawer.setFocusable(true);}
             else {setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);setEnabled(false);}
             tick();
@@ -120,17 +120,18 @@ final class HomeScene extends FrameLayout {
             int pad=dp(18),gap=dp(12),cardW=(w-2*pad-gap)/2,cardH=Math.min(dp(160),(int)(h*.205f));
             clock.measure(exact(cardW),exact(cardH));date.measure(exact(cardW),exact(cardH));
             clockCaption.measure(exact(cardW),exact(dp(26)));dateCaption.measure(exact(cardW),exact(dp(26)));
-            int cellW=(w-2*dp(12))/4,cellH=(int)(h*.108f);int icon=Math.max(dp(24),Math.min(dp(60),Math.min((int)(cellW*.66f),cellH-dp(33))));
+            int cellW=(w-2*dp(16))/4,cellH=(int)(h*.112f);int icon=Math.max(dp(32),Math.min(dp(56),Math.min((int)(cellW*.62f),cellH-dp(30))));
             for(int i=0;i<16;i++){icons[i].getLayoutParams().width=icon;icons[i].getLayoutParams().height=icon;tiles[i].measure(exact(cellW),exact(cellH));}
-            drawer.measure(exact(Math.min(w-dp(36),dp(210))),exact(dp(46)));
+            drawer.measure(exact(Math.min(w-dp(40),dp(220))),exact(dp(48)));
         }
         @Override protected void onLayout(boolean c,int l,int t,int r,int b){
             int w=r-l,h=b-t,pad=dp(18),cw=clock.getMeasuredWidth(),ch=clock.getMeasuredHeight();
             int top=(int)(h*.095f);clock.layout(pad,top,pad+cw,top+ch);date.layout(w-pad-cw,top,w-pad,top+ch);
             int captionTop=top+ch-dp(37);clockCaption.layout(pad,captionTop,pad+cw,captionTop+dp(26));dateCaption.layout(w-pad-cw,captionTop,w-pad,captionTop+dp(26));
-            int gridTop=(int)(h*.36f),cellW=tiles[0].getMeasuredWidth(),cellH=tiles[0].getMeasuredHeight();
-            for(int i=0;i<16;i++){int x=(w-cellW*4)/2+(i%4)*cellW,y=gridTop+(i/4)*cellH;tiles[i].layout(x,y,x+cellW,y+cellH);}
-            int dw=drawer.getMeasuredWidth(),dh=drawer.getMeasuredHeight(),dy=Math.min(h-dp(80),(int)(h*.855f));drawer.layout((w-dw)/2,dy,(w+dw)/2,dy+dh);
+            int gridTop=(int)(h*.35f),cellW=tiles[0].getMeasuredWidth(),cellH=tiles[0].getMeasuredHeight();
+            int rowGap=dp(4);
+            for(int i=0;i<16;i++){int x=(w-cellW*4)/2+(i%4)*cellW,y=gridTop+(i/4)*(cellH+rowGap);tiles[i].layout(x,y,x+cellW,y+cellH);}
+            int dw=drawer.getMeasuredWidth(),dh=drawer.getMeasuredHeight(),dy=Math.min(h-dp(90),(int)(h*.84f));drawer.layout((w-dw)/2,dy,(w+dw)/2,dy+dh);
         }
     }
     final class TodayPage extends ViewGroup {

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.*;
 import android.content.*;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.*;
 import android.provider.Settings;
@@ -19,46 +20,98 @@ public final class MainActivity extends Activity {
     @Override public void onCreate(Bundle saved){
         super.onCreate(saved);BridgeConnection.init(this);Shizuku.addRequestPermissionResultListener(permission);
         getWindow().setNavigationBarColor(Color.rgb(16,23,20));
-        ScrollView scroll=new ScrollView(this);LinearLayout page=new LinearLayout(this);page.setOrientation(LinearLayout.VERTICAL);page.setPadding(dp(24),dp(28),dp(24),dp(40));scroll.addView(page);
-        scroll.setOnApplyWindowInsetsListener((v,insets)->{android.graphics.Insets i=insets.getInsets(WindowInsets.Type.systemBars()|WindowInsets.Type.displayCutout());v.setPadding(i.left,i.top,i.right,i.bottom);return insets;});
+        ScrollView scroll=new ScrollView(this);
+        LinearLayout page=new LinearLayout(this);
+        page.setOrientation(LinearLayout.VERTICAL);
+        page.setPadding(dp(20),dp(24),dp(20),dp(36));
+        scroll.addView(page);
+        scroll.setOnApplyWindowInsetsListener((v,insets)->{
+            android.graphics.Insets i=insets.getInsets(WindowInsets.Type.systemBars()|WindowInsets.Type.displayCutout());
+            v.setPadding(i.left,i.top,i.right,i.bottom);
+            return insets;
+        });
+        scroll.setBackgroundColor(Color.rgb(16,23,20));
+
+        // 顶部标题区
         label(page,getString(R.string.app_name),30,Color.WHITE);
-        Button language=new Button(this);language.setId(R.id.language_button);language.setAllCaps(false);language.setText(getString(R.string.language_current,languageName()));language.setOnClickListener(v->chooseLanguage());page.addView(language,new LinearLayout.LayoutParams(-1,-2));
-        label(page,getString(R.string.tagline),17,0xffb3eed4);
-        label(page,getString(R.string.intro),15,0xffc5d3cd);
-        state=label(page,"",15,0xffb3eed4);
+        label(page,getString(R.string.tagline),15,0xffb3eed4);
+
+        // 语言按钮 — 胶囊样式
+        Button language=new Button(this);
+        language.setId(R.id.language_button);
+        language.setAllCaps(false);
+        language.setText(getString(R.string.language_current,languageName()));
+        language.setTextColor(Color.WHITE);
+        GradientDrawable langBg=new GradientDrawable();
+        langBg.setColor(0x481d334b);
+        langBg.setCornerRadius(dp(24));
+        language.setBackground(langBg);
+        language.setPadding(dp(20),dp(8),dp(20),dp(8));
+        language.setOnClickListener(v->chooseLanguage());
+        LinearLayout.LayoutParams langLp=new LinearLayout.LayoutParams(-1,-2);
+        langLp.topMargin=dp(4);
+        langLp.bottomMargin=dp(10);
+        page.addView(language,langLp);
+
+        // 状态行
+        state=label(page,"",14,0xffb3eed4);
+
+        // 预览按钮 — 独立卡片前
         button(page,getString(R.string.preview),()->startActivity(new Intent(this,PreviewActivity.class)));
-        label(page,getString(R.string.home_setup),14,0xffc5d3cd);
-        button(page,getString(R.string.home_open),this::openHome);
-        button(page,getString(R.string.home_default),()->{
+
+        // 卡片1：主屏幕设置
+        LinearLayout homeCard=card(page);
+        label(homeCard,getString(R.string.home_setup),14,0xffc5d3cd);
+        button(homeCard,getString(R.string.home_open),this::openHome);
+        button(homeCard,getString(R.string.home_default),()->{
             android.app.role.RoleManager roles=getSystemService(android.app.role.RoleManager.class);
             if(roles.isRoleHeld(android.app.role.RoleManager.ROLE_HOME))openHome();
             else startActivityForResult(roles.createRequestRoleIntent(android.app.role.RoleManager.ROLE_HOME),9);
         });
-        label(page,getString(R.string.inner_controls_title),21,Color.WHITE);
-        label(page,getString(R.string.inner_controls_body),14,0xffc5d3cd);
-        label(page,getString(R.string.setup_title),21,Color.WHITE);
-        label(page,getString(R.string.setup_body),14,0xffc5d3cd);
-        button(page,getString(R.string.open_shizuku),()->{Intent launch=getPackageManager().getLaunchIntentForPackage("moe.shizuku.privileged.api");if(launch!=null)startActivity(launch);else startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse("https://shizuku.rikka.app/guide/setup/")));});
-        button(page,getString(R.string.connect_shizuku),()->{
+
+        // 卡片2：内屏控制
+        LinearLayout innerCard=card(page);
+        label(innerCard,getString(R.string.inner_controls_title),19,Color.WHITE);
+        label(innerCard,getString(R.string.inner_controls_body),13,0xffc5d3cd);
+
+        // 卡片3：初始设置
+        LinearLayout setupCard=card(page);
+        label(setupCard,getString(R.string.setup_title),19,Color.WHITE);
+        label(setupCard,getString(R.string.setup_body),13,0xffc5d3cd);
+        button(setupCard,getString(R.string.open_shizuku),()->{Intent launch=getPackageManager().getLaunchIntentForPackage("moe.shizuku.privileged.api");if(launch!=null)startActivity(launch);else startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse("https://shizuku.rikka.app/guide/setup/")));});
+        button(setupCard,getString(R.string.connect_shizuku),()->{
             if(!Shizuku.pingBinder()){new AlertDialog.Builder(this).setMessage(getString(R.string.shizuku_not_running)).setPositiveButton(getString(R.string.official_guide),(d,w)->startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse("https://shizuku.rikka.app/guide/setup/")))).setNegativeButton(getString(R.string.close),null).show();return;}
             if(BridgeConnection.permitted())BridgeConnection.connect(this);else Shizuku.requestPermission(7);
         });
-        button(page,getString(R.string.allow_overlay),()->startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:"+getPackageName()))));
-        label(page,getString(R.string.screen_access_title),21,Color.WHITE);
-        label(page,getString(R.string.screen_access_body),14,0xffc5d3cd);
-        label(page,getString(R.string.power_body),14,0xffc5d3cd);
-        button(page,MotionSettings.enabled(this)?getString(R.string.resume_animation):getString(R.string.enable_animation),this::startMotion);
-        button(page,getString(R.string.stop_animation),()->{MotionSettings.setEnabled(this,false);stopService(new Intent(this,MotionService.class));if(!MotionService.running)BridgeConnection.disconnect();});
-        label(page,getString(R.string.recovery_title),21,Color.WHITE);
-        label(page,getString(R.string.recovery_body),14,0xffc5d3cd);
-        label(page,getString(R.string.battery_body),14,0xffc5d3cd);
-        button(page,getString(R.string.battery_settings),()->startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,Uri.parse("package:"+getPackageName()))));
-        label(page,getString(R.string.sensors_title),21,Color.WHITE);
-        label(page,getString(R.string.sensors_body),14,0xffc5d3cd);
-        button(page,getString(R.string.probe_sensors),()->probe(0));
-        diagnostic=label(page,getString(R.string.not_measured),13,0xffd0dbd5);
+        button(setupCard,getString(R.string.allow_overlay),()->startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:"+getPackageName()))));
+
+        // 卡片4：屏幕访问
+        LinearLayout screenCard=card(page);
+        label(screenCard,getString(R.string.screen_access_title),19,Color.WHITE);
+        label(screenCard,getString(R.string.screen_access_body),13,0xffc5d3cd);
+        label(screenCard,getString(R.string.power_body),13,0xffc5d3cd);
+        button(screenCard,MotionSettings.enabled(this)?getString(R.string.resume_animation):getString(R.string.enable_animation),this::startMotion);
+        button(screenCard,getString(R.string.stop_animation),()->{MotionSettings.setEnabled(this,false);stopService(new Intent(this,MotionService.class));if(!MotionService.running)BridgeConnection.disconnect();});
+
+        // 卡片5：恢复
+        LinearLayout recoveryCard=card(page);
+        label(recoveryCard,getString(R.string.recovery_title),19,Color.WHITE);
+        label(recoveryCard,getString(R.string.recovery_body),13,0xffc5d3cd);
+        label(recoveryCard,getString(R.string.battery_body),13,0xffc5d3cd);
+        button(recoveryCard,getString(R.string.battery_settings),()->startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,Uri.parse("package:"+getPackageName()))));
+
+        // 卡片6：传感器诊断
+        LinearLayout sensorCard=card(page);
+        label(sensorCard,getString(R.string.sensors_title),19,Color.WHITE);
+        label(sensorCard,getString(R.string.sensors_body),13,0xffc5d3cd);
+        button(sensorCard,getString(R.string.probe_sensors),()->probe(0));
+        diagnostic=label(sensorCard,getString(R.string.not_measured),13,0xffd0dbd5);
+
+        // 底部注释
         label(page,getString(R.string.device_note),12,0xff90a298);
-        setContentView(scroll);handler.post(refresh);
+
+        setContentView(scroll);
+        handler.post(refresh);
     }
     private void startMotion(){
         if(!Settings.canDrawOverlays(this)){Toast.makeText(this,getString(R.string.need_overlay),Toast.LENGTH_LONG).show();return;}
@@ -134,7 +187,44 @@ public final class MainActivity extends Activity {
     }};
     @Override protected void onResume(){super.onResume();if(MotionSettings.enabled(this)&&!MotionService.running&&Settings.canDrawOverlays(this))startForegroundService(new Intent(this,MotionService.class).setAction("restore"));}
     private int dp(int x){return Math.round(x*getResources().getDisplayMetrics().density);}
-    private TextView label(LinearLayout parent,String text,int size,int color){TextView v=new TextView(this);v.setText(text);v.setTextSize(size);v.setTextColor(color);v.setPadding(0,dp(10),0,dp(10));v.setLineSpacing(dp(3),1);parent.addView(v);return v;}
-    private void button(LinearLayout parent,String title,Runnable action){Button b=new Button(this);b.setText(title);b.setAllCaps(false);b.setOnClickListener(v->action.run());parent.addView(b,new LinearLayout.LayoutParams(-1,-2));}
+    private TextView label(LinearLayout parent,String text,int size,int color){
+        TextView v=new TextView(this);
+        v.setText(text);
+        v.setTextSize(size);
+        v.setTextColor(color);
+        v.setPadding(0,dp(6),0,dp(6));
+        v.setLineSpacing(dp(3),1);
+        parent.addView(v);
+        return v;
+    }
+    private void button(LinearLayout parent,String title,Runnable action){
+        Button b=new Button(this);
+        b.setText(title);
+        b.setAllCaps(false);
+        b.setTextColor(Color.WHITE);
+        b.setPadding(dp(12),dp(10),dp(12),dp(10));
+        GradientDrawable bg=new GradientDrawable();
+        bg.setColor(0x33ffffff);
+        bg.setCornerRadius(dp(12));
+        b.setBackground(bg);
+        b.setOnClickListener(v->action.run());
+        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);
+        lp.topMargin=dp(6);
+        parent.addView(b,lp);
+    }
+    /** 卡片容器：半透明白底圆角 */
+    private LinearLayout card(LinearLayout parent){
+        LinearLayout card=new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setPadding(dp(16),dp(14),dp(16),dp(14));
+        GradientDrawable bg=new GradientDrawable();
+        bg.setColor(0x1affffff);
+        bg.setCornerRadius(dp(16));
+        card.setBackground(bg);
+        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);
+        lp.bottomMargin=dp(14);
+        parent.addView(card,lp);
+        return card;
+    }
     @Override protected void onDestroy(){handler.removeCallbacks(refresh);Shizuku.removeRequestPermissionResultListener(permission);super.onDestroy();}
 }

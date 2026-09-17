@@ -2,6 +2,7 @@ package jp.bunkaich.sukashimotion;
 
 import android.app.Activity;
 import android.graphics.*;
+import android.graphics.drawable.GradientDrawable;
 import android.os.*;
 import android.view.*;
 import android.widget.*;
@@ -12,15 +13,75 @@ public final class PreviewActivity extends Activity {
     private FrameLayout canvas;private SnapshotView snapshot;private PreviewRig rig;private boolean physical=true;private TextView degrees;private boolean inner=true,closed;private int angle=180,generation;
     @Override public void onCreate(Bundle saved){
         super.onCreate(saved);if(saved!=null){angle=saved.getInt("angle",180);inner=saved.getBoolean("inner",true);physical=saved.getBoolean("physical",true);}getWindow().setDecorFitsSystemWindows(false);
-        LinearLayout root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setPadding(16,24,16,32);root.setBackgroundColor(Color.BLACK);
-        degrees=new TextView(this);degrees.setTextColor(Color.WHITE);degrees.setTextSize(18);root.addView(degrees);
-        canvas=new FrameLayout(this);root.addView(canvas,new LinearLayout.LayoutParams(-1,0,1));
-        SeekBar seek=new SeekBar(this);seek.setMax(180);seek.setProgress(angle);seek.setContentDescription(getString(R.string.hinge_angle));root.addView(seek);
+        LinearLayout root=new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setPadding(16,24,16,32);
+        root.setBackgroundColor(Color.BLACK);
+
+        degrees=new TextView(this);
+        degrees.setTextColor(Color.WHITE);
+        degrees.setTextSize(18);
+        degrees.setPadding(0,0,0,dp(8));
+        root.addView(degrees);
+
+        canvas=new FrameLayout(this);
+        root.addView(canvas,new LinearLayout.LayoutParams(-1,0,1));
+
+        // 底部控件面板
+        LinearLayout panel=new LinearLayout(this);
+        panel.setOrientation(LinearLayout.VERTICAL);
+        GradientDrawable panelBg=new GradientDrawable();
+        panelBg.setColor(0x22ffffff);
+        panelBg.setCornerRadius(dp(16));
+        panel.setBackground(panelBg);
+        panel.setPadding(dp(12),dp(12),dp(12),dp(12));
+
+        SeekBar seek=new SeekBar(this);
+        seek.setMax(180);
+        seek.setProgress(angle);
+        seek.setContentDescription(getString(R.string.hinge_angle));
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){public void onStartTrackingTouch(SeekBar s){}public void onStopTrackingTouch(SeekBar s){}public void onProgressChanged(SeekBar s,int value,boolean fromUser){angle=value;update();}});
-        Button mode=new Button(this);mode.setText(getString(inner?R.string.switch_cover:R.string.switch_inner));mode.setOnClickListener(v->{inner=!inner;mode.setText(inner?getString(R.string.switch_cover):getString(R.string.switch_inner));build();});root.addView(mode);
-        Button view=new Button(this);view.setText(getString(physical?R.string.view_render:R.string.view_physical));view.setOnClickListener(v->{physical=!physical;view.setText(physical?getString(R.string.view_render):getString(R.string.view_physical));if(rig!=null)rig.setPhysical(physical);update();});root.addView(view);
-        Button back=new Button(this);back.setText(getString(R.string.back_settings));back.setOnClickListener(v->finish());root.addView(back);setContentView(root);getWindow().getInsetsController().hide(WindowInsets.Type.systemBars());canvas.post(this::build);update();
+        panel.addView(seek);
+
+        // 按钮行
+        LinearLayout buttonRow=new LinearLayout(this);
+        buttonRow.setOrientation(LinearLayout.HORIZONTAL);
+
+        Button mode=new Button(this);
+        mode.setText(getString(inner?R.string.switch_cover:R.string.switch_inner));
+        mode.setAllCaps(false);
+        mode.setTextColor(Color.WHITE);
+        mode.setOnClickListener(v->{inner=!inner;mode.setText(inner?getString(R.string.switch_cover):getString(R.string.switch_inner));build();});
+        buttonRow.addView(mode,new LinearLayout.LayoutParams(0,-2,1));
+
+        Button view=new Button(this);
+        view.setText(getString(physical?R.string.view_render:R.string.view_physical));
+        view.setAllCaps(false);
+        view.setTextColor(Color.WHITE);
+        view.setOnClickListener(v->{physical=!physical;view.setText(physical?getString(R.string.view_render):getString(R.string.view_physical));if(rig!=null)rig.setPhysical(physical);update();});
+        buttonRow.addView(view,new LinearLayout.LayoutParams(0,-2,1));
+
+        LinearLayout.LayoutParams rowLp=new LinearLayout.LayoutParams(0,-2,1);
+        rowLp.leftMargin=dp(4);
+        mode.setLayoutParams(rowLp);
+        view.setLayoutParams(new LinearLayout.LayoutParams(0,-2,1));
+
+        panel.addView(buttonRow);
+
+        Button back=new Button(this);
+        back.setText(getString(R.string.back_settings));
+        back.setAllCaps(false);
+        back.setTextColor(Color.WHITE);
+        back.setOnClickListener(v->finish());
+        LinearLayout.LayoutParams backLp=new LinearLayout.LayoutParams(-1,-2);
+        backLp.topMargin=dp(6);
+        panel.addView(back,backLp);
+
+        root.addView(panel);
+
+        setContentView(root);getWindow().getInsetsController().hide(WindowInsets.Type.systemBars());canvas.post(this::build);update();
     }
+    private int dp(int x){return Math.round(x*getResources().getDisplayMetrics().density);}
     private void update(){degrees.setText(getString(R.string.preview_degrees,getString(inner?R.string.inner:R.string.cover),angle,getString(physical?R.string.physical_view:R.string.render_view)));if(rig!=null)rig.setAngle(angle);}
     private void build(){
         int ticket=++generation;boolean mode=inner;

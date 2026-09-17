@@ -55,6 +55,7 @@ public final class MainActivity extends Activity {
 
         // 状态行
         state=label(page,"",14,0xffb3eed4);
+        label(page,getString(R.string.intro),14,0xffc5d3cd);
 
         // 预览按钮 — 独立卡片前
         button(page,getString(R.string.preview),()->startActivity(new Intent(this,PreviewActivity.class)));

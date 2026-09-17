@@ -74,7 +74,7 @@ The cover screen uses Samsung's normal navigation. The inner screen has a small 
 
 ## Folduo home
 
-To use the included launcher, tap **Use Folduo as the home app** in Folduo settings and select Folduo. Tap an icon to open an app, long-press to replace it, or use **All apps** to browse installed apps. Tap the **Folduo** button on the home screen to return to settings. English and Japanese are supported.
+To use the included launcher, tap **Use Folduo as the home app** in Folduo settings and select Folduo. Tap an icon to open an app, long-press to replace it, or use **All apps** to browse installed apps. Tap the **Folduo** button on the home screen to return to settings. English, Japanese, and Simplified Chinese are supported.
 
 On the tested Fold7, Samsung redirects new app launches from the inner display to the cover display. Folduo home moves only the selected app to the inner display and restores the selected home when returning. This does not fix other launchers.
 
